@@ -4,47 +4,39 @@ import math
 import shapeDetection as sd
 
 # Camera parameters
+CAMERA_ANGLE = 30  # degrees
+DISTANCE_TO_SHAPE = 70  # cm
+B = 20  # Distance between cameras (cm)
+f = 26  # Focal length (mm)
+FOV = 80  # Field of view (degrees)
 
-CAMERA_ANGLE = 30           # degrees
-DISTANCE_TO_SHAPE = 70      # cm
 
-B = 20                      # Distance between cameras (cm)
-f = 26                      # Focal length (mm)
-FOV = 80                    # FIeld of view (degrees)
-
-fPixel = ()/
-
-def calculate_3d_point(x1, x2, focal_length=1000):
-    # Convert camera angle to radians
-    angle_rad = math.radians(CAMERA_ANGLE)
+def calculate_3d_point(x1, x2, width):
+    fPixel = (width * 0.5) / np.tan(FOV * 0.5 * np.pi / 180)
 
     # Calculate disparity
-    disparity = abs(x1 - x2)
+    disparity = abs(x2 - x1)
 
     if disparity == 0:
         return None  # Avoid division by zero
 
     # Calculate Z (depth)
-    Z = (CAMERA_DISTANCE * focal_length) / disparity
+    Z = (B * fPixel) / disparity
 
     # Calculate X (horizontal position)
-    X = (Z * (x1 + x2)) / (2 * focal_length)
+    X = (x2)/3
 
     return X, Z
-
-
-def match_corners(corners1, corners2):
-    # Simple matching based on vertical position
-    # You might need a more sophisticated matching algorithm depending on your setup
-    corners1_sorted = sorted(corners1, key=lambda x: x[1])
-    corners2_sorted = sorted(corners2, key=lambda x: x[1])
-
-    return list(zip(corners1_sorted, corners2_sorted))
 
 
 def create_birds_eye_view(corner_3d_positions, canvas_size=(600, 600), margin=50):
     # Create a white canvas
     canvas = np.ones((canvas_size[0], canvas_size[1], 3), dtype=np.uint8) * 255
+
+    if not corner_3d_positions:
+        cv2.putText(canvas, "No valid 3D points found", (50, canvas_size[1] // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+        return canvas
 
     # Extract X and Z coordinates
     x_coords = [x for x, z in corner_3d_positions]
@@ -96,32 +88,38 @@ def create_birds_eye_view(corner_3d_positions, canvas_size=(600, 600), margin=50
 
     return canvas
 
+
 # Main code
-img1 = cv2.imread('Imgs/izq.jpg')
-img2 = cv2.imread('Imgs/der.jpg')
+img1 = cv2.imread('Imgs/lvlizq1.jpg')
+img2 = cv2.imread('Imgs/lvlder1.jpg')
+
+# img1 = cv2.imread('Imgs/der.jpg')
+# img2 = cv2.imread('Imgs/izq.jpg')
 
 contours1, mask1, corners1 = sd.detectar_contornos_y_esquinas(img1)
 contours2, mask2, corners2 = sd.detectar_contornos_y_esquinas(img2)
 
-# Match corners between images
-matched_corners = match_corners(corners1, corners2)
+height, width, depth = img1.shape
 
-# Calculate 3D positions
+# Calculate 3D positions directly without matching
 corner_3d_positions = []
-for (corner1, corner2) in matched_corners:
-    x1, y1 = corner1
-    x2, y2 = corner2
+for i in range(min(len(corners1), len(corners2))):
+    x1, y1 = corners1[i]
+    x2, y2 = corners2[i]
 
-    result = calculate_3d_point(x1, x2)
+    if i == 3 or i == 2:
+        print(i, x1, x2)
+
+    result = calculate_3d_point(x1, x2, width)
     if result:
         X, Z = result
         corner_3d_positions.append((X, Z))
 
-# After calculating corner_3d_positions, add:
+# Create and show birds eye view
 birds_eye_view = create_birds_eye_view(corner_3d_positions)
 cv2.imshow('Bird\'s Eye View', birds_eye_view)
 
-# Visualize the results
+# Visualize the results on original images
 for idx, (img, contours, corners) in enumerate([(img1, contours1, corners1), (img2, contours2, corners2)]):
     img_result = img.copy()
 
