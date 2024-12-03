@@ -8,7 +8,7 @@ def train():
     # Obtener la ruta del directorio actual del archivo .py
     dir = os.path.dirname(os.path.abspath(__file__))
     # Construir la ruta al archivo data.yaml en el dataset
-    data_path = os.path.join(dir, 'Construction_toysv2iyolov11', 'data.yaml')
+    data_path = os.path.join(dir, 'Construction_toysv3iyolov11', 'data.yaml')
 
     # Entrenar el modelo e incluir parámetros adicionales para estabilidad
     train_results = model.train(

@@ -7,7 +7,7 @@ from ultralytics import YOLO
 model = YOLO("best.pt")
 
 # Perform object detection on an image
-results = model.predict("Imgs/training/2.jpg", save=True, show=True)
+results = model.predict("Imgs/t1.jpg", save=True, show=True)
 
 # Access the bounding box coordinates
 for result in results:
@@ -23,5 +23,3 @@ for result in results:
 
         print(f"Bottom-Center: {bottom_center}")
         time.sleep(15)
-
-
