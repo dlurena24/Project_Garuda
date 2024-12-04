@@ -42,7 +42,7 @@ def calculate_3d_point(x1, x2, width):
     Z = (B * fPixel) / disparity
 
     # Calculate X (horizontal position)
-    X = (x2)/3
+    X = (x2)/30
 
     return X, Z
 

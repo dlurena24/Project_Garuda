@@ -13,7 +13,7 @@ def train():
     # Entrenar el modelo e incluir parámetros adicionales para estabilidad
     train_results = model.train(
         data=data_path,
-        epochs=50,
+        epochs=100,
         # img_size=640,  # Descomentar si se necesita una resolución específica
         device='cpu'    # Cambiar a 'cuda' si tienes una GPU compatible
     )
