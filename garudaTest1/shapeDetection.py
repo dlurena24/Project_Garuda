@@ -13,13 +13,13 @@ def detectar_contornos_y_esquinas(image):
     red_mask = mask1 | mask2
     contours, _ = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    corners = []
+    #corners = []
     if contours:
         largest_contour = max(contours, key=cv2.contourArea)
         epsilon = 0.02 * cv2.arcLength(largest_contour, True)
         approx = cv2.approxPolyDP(largest_contour, epsilon, True)
         corners = [point[0] for point in approx]
-        # Ordenar las esquinas de izquierda a derecha usando la componente x
+        # Sort corners from left to right using the x axis
         corners_sorted = sorted(corners, key=lambda point: point[0])
 
     return contours, red_mask, corners_sorted
