@@ -4,14 +4,12 @@ import math
 
 def detectar_contornos_y_esquinas(image):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    lower_red1 = np.array([0, 100, 100])
-    upper_red1 = np.array([10, 255, 255])
-    lower_red2 = np.array([170, 100, 100])
-    upper_red2 = np.array([180, 255, 255])
-    mask1 = cv2.inRange(hsv, lower_red1, upper_red1)
-    mask2 = cv2.inRange(hsv, lower_red2, upper_red2)
-    red_mask = mask1 | mask2
-    contours, _ = cv2.findContours(red_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Changed from red to yellow detection
+    lower_yellow = np.array([95, 100, 150])
+    upper_yellow = np.array([115, 255, 255])
+    # Create mask for yellow color
+    yellow_mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    contours, _ = cv2.findContours(yellow_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     #corners = []
     if contours:
@@ -22,5 +20,4 @@ def detectar_contornos_y_esquinas(image):
         # Sort corners from left to right using the x axis
         corners_sorted = sorted(corners, key=lambda point: point[0])
 
-    return contours, red_mask, corners_sorted
-
+    return contours, yellow_mask, corners_sorted
