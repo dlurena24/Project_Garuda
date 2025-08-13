@@ -1,6 +1,7 @@
-21:59:45 - dump-truck - Zona 1
-21:59:46 - dump-truck - Zona 1
-21:59:46 - dump-truck - Zona 1
-21:59:49 - dump-truck - Zona 1
-21:59:52 - dump-truck - Zona 1
-22:00:53 - dump-truck - Zona 2
+22:30:50 - dump-truck - Zona 1
+22:30:50 - dump-truck - Zona 1
+22:30:51 - dump-truck - Zona 1
+22:30:56 - dump-truck - Zona 1
+22:30:57 - dump-truck - Zona 1
+22:30:57 - dump-truck - Zona 1
+22:30:58 - dump-truck - Zona 1
